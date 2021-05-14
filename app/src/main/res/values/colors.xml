@@ -14,7 +14,8 @@
     <color name="colorPrimaryLight">#1E2746</color>
     <color name="colorTextPrimary">#CBD5ED</color>
     <color name="colorTextSecondary">#4AfB82</color>
-    <color name="colorTextOther">#5AD303</color>
+    <color name="colorTextOther">#FAD303</color>
     <color name="colorThemeExtra">#FF5252</color>
+    <color name="holoGreenLight">#00d024</color>
 
 </resources>
