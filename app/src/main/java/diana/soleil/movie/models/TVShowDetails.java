@@ -7,6 +7,8 @@ import java.util.List;
 public class TVShowDetails {
     @SerializedName("url")
     private String url;
+    @SerializedName("image_path")
+    private String imagePath;
     @SerializedName("description")
     private String description;
     @SerializedName("runtime")
@@ -24,6 +26,9 @@ public class TVShowDetails {
         return url;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
     public String getDescription() {
         return description;
     }

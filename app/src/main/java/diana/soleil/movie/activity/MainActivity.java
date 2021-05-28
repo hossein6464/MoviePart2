@@ -8,16 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import diana.soleil.movie.R;
 import diana.soleil.movie.adapters.TVShowsAdapter;
 import diana.soleil.movie.databinding.ActivityMainBinding;
+import diana.soleil.movie.listeners.TVShowsListener;
 import diana.soleil.movie.models.TVShow;
 import diana.soleil.movie.viewmodels.MostPopularTVShowsViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TVShowsListener {
 
     private ActivityMainBinding activityMainBinding;
     private MostPopularTVShowsViewModel viewModel;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private  void doInitialization() {
         activityMainBinding.tvShowsRecycleView.setHasFixedSize(true);
         viewModel = new ViewModelProvider(this).get(MostPopularTVShowsViewModel.class);
-        tvShowsAdapter = new TVShowsAdapter(tvShows);
+        tvShowsAdapter = new TVShowsAdapter(tvShows,this);
         activityMainBinding.tvShowsRecycleView.setAdapter(tvShowsAdapter);
         activityMainBinding.tvShowsRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -74,4 +76,16 @@ public class MainActivity extends AppCompatActivity {
             activityMainBinding.setIsLoadingMore(activityMainBinding.getIsLoadingMore() == null || !activityMainBinding.getIsLoadingMore());
             }
         }
+
+    @Override
+    public void onTVShowClicked(TVShow tvShow) {
+        Intent intent = new Intent(getApplicationContext(), TVShowDetailsActivity.class);
+        intent.putExtra("id",tvShow.getId());
+        intent.putExtra("name",tvShow.getName());
+        intent.putExtra("startDate",tvShow.getStartDate());
+        intent.putExtra("country",tvShow.getCountry());
+        intent.putExtra("network",tvShow.getNetwork());
+        intent.putExtra("status",tvShow.getStatus());
+        startActivity(intent);
     }
+}
