@@ -8,22 +8,30 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 import diana.soleil.movie.R;
+import diana.soleil.movie.adapters.EpisodesAdapter;
 import diana.soleil.movie.adapters.ImageSliderAdapter;
 import diana.soleil.movie.databinding.ActivityTVShowDetailsBinding;
+import diana.soleil.movie.databinding.LayoutEpidosdesBottomSheetBinding;
 import diana.soleil.movie.network.ApiService;
 import diana.soleil.movie.responses.TVShowDetailsResponse;
 import diana.soleil.movie.viewmodels.TVShowDetailsViewModel;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.Locale;
 
@@ -31,6 +39,8 @@ import java.util.Locale;
 public class TVShowDetailsActivity extends AppCompatActivity {
     private ActivityTVShowDetailsBinding activityTVShowDetailsBinding;
     private TVShowDetailsViewModel tvShowDetailsViewModel;
+    private BottomSheetDialog episodesBottomSheetDialog;
+    private LayoutEpidosdesBottomSheetBinding layoutEpidosdesBottomSheetBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +119,38 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                             activityTVShowDetailsBinding.buttonWebsite.setVisibility(View.VISIBLE);
                             activityTVShowDetailsBinding.buttonEpisode.setVisibility(View.VISIBLE);
 
+                        activityTVShowDetailsBinding.buttonEpisode.setOnClickListener(v -> {
+                            if (episodesBottomSheetDialog == null) {
+                                episodesBottomSheetDialog = new BottomSheetDialog(TVShowDetailsActivity.this);
+                                layoutEpidosdesBottomSheetBinding = DataBindingUtil.inflate(
+                                        LayoutInflater.from(TVShowDetailsActivity.this),
+                                        R.layout.layout_epidosdes_bottom_sheet,
+                                        findViewById(R.id.episodeContainer),
+                                        false
+                                );
+                                episodesBottomSheetDialog.setContentView(layoutEpidosdesBottomSheetBinding.getRoot());
+                                layoutEpidosdesBottomSheetBinding.episodesRecycleView.setAdapter(
+                                        new EpisodesAdapter(tvShowDetailsResponse.getTvShowDetails().getEpisodes())
+                                );
+                                layoutEpidosdesBottomSheetBinding.textTitle.setText(
+                                        String.format("Episodes | %s", getIntent().getStringExtra("name"))
+                                );
+                                layoutEpidosdesBottomSheetBinding.imageClose.setOnClickListener(v1 -> episodesBottomSheetDialog.dismiss());
+                            }
+                            // Optional Section
+                            FrameLayout frameLayout = episodesBottomSheetDialog.findViewById(
+                                    com.google.android.material.R.id.design_bottom_sheet
+                            );
+                            if (frameLayout != null) {
+                                BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(frameLayout);
+                                bottomSheetBehavior.setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels);
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            }
+                            // End of Optional Section
+
+                            episodesBottomSheetDialog.show();
+
+                        });
                             loadBasicTVShowDetails();
                         }
                 }
