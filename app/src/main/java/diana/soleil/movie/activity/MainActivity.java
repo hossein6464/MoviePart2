@@ -14,6 +14,7 @@ import diana.soleil.movie.viewmodels.MostPopularTVShowsViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
                 }
             }
         });
+        activityMainBinding.imageViewWatchlistIcon.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),WatchlistActivity.class)));
+        activityMainBinding.imageViewSearchIcon.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),SearchActivity.class)));
         getMostPopularTVShows();
     }
     public void getMostPopularTVShows(){
@@ -71,21 +74,37 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
     }
 
     private void toggleLoading() {
-        if (currentPage ==1) {
+
+       if (currentPage == 1) {
+           if (activityMainBinding.getIsLoading() != null && activityMainBinding.getIsLoading()) {
+               activityMainBinding.setIsLoading(false);
+           } else {
+               activityMainBinding.setIsLoading(true);
+           }
+       } else {
+           if (activityMainBinding.getIsLoadingMore() != null && activityMainBinding.getIsLoadingMore()) {
+               activityMainBinding.setIsLoadingMore(false);
+           } else {
+               activityMainBinding.setIsLoadingMore(true);
+           }
+
+       }
+        /*if (currentPage ==1) {
             activityMainBinding.setIsLoading(activityMainBinding.getIsLoading() == null || !activityMainBinding.getIsLoading());
             activityMainBinding.setIsLoadingMore(activityMainBinding.getIsLoadingMore() == null || !activityMainBinding.getIsLoadingMore());
-            }
+            }*/
         }
 
     @Override
     public void onTVShowClicked(TVShow tvShow) {
         Intent intent = new Intent(getApplicationContext(), TVShowDetailsActivity.class);
-        intent.putExtra("id",tvShow.getId());
-        intent.putExtra("name",tvShow.getName());
-        intent.putExtra("startDate",tvShow.getStartDate());
-        intent.putExtra("country",tvShow.getCountry());
-        intent.putExtra("network",tvShow.getNetwork());
-        intent.putExtra("status",tvShow.getStatus());
+        intent.putExtra("tvShow", tvShow);
+        //intent.putExtra("id",tvShow.getId());
+        //intent.putExtra("name",tvShow.getName());
+        //intent.putExtra("startDate",tvShow.getStartDate());
+        //intent.putExtra("country",tvShow.getCountry());
+        //intent.putExtra("network",tvShow.getNetwork());
+        //intent.putExtra("status",tvShow.getStatus());
         startActivity(intent);
     }
 }
